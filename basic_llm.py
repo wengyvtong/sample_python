@@ -33,9 +33,17 @@ def get_NVIDIA_chain():
     return prompt | llm
 
 if __name__ == "__main__":
+
+    select = input("请选择模型，openai_chain请输入1，deepseek_chain请输入2，NVIDIA_chain请输入3:")
+
     question = input("Enter your question: ").strip()
 
-    chain = get_NVIDIA_chain()
+    if select=="1":
+        chain = get_openai_chain()
+    elif select=="2":
+        chain = get_deepseek_chain()
+    elif select=="3":
+        chain = get_NVIDIA_chain()
 
     response = chain.invoke({"question": question})
     print(f"\n[Response]:\n{response}")
