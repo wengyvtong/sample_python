@@ -10,57 +10,21 @@ from dotenv import load_dotenv
 
 
 class WeatherInput(BaseModel):
-    location: str = Field(description="城市名称，例如：北京、上海")
-    date: Optional[str] = Field(description="查询日期，格式YYYY-MM-DD，默认今天")
-    temperature: float = Field(description="温度值，单位摄氏度")
-    wind_speed: int = Field(description="风力等级，1-12级")
-    condition: Optional[str] = Field(default="晴",
-                                     description="天气状况，例如：晴、多云、雨")
-    humidity: Optional[int] = Field(default=None,
-                                    description="湿度百分比，0-100之间的整数")
+    location: str = Field(description="City name or location for weather forecast")
 
 
-def get_weather(
-        location: str,
-        temperature: 25.5,
-        wind_speed: 3,
-        date: Optional[str] = None,
-        condition: str = "晴",
-        humidity: Optional[int] = 16
-) -> str:
-    """获取指定位置的天气信息"""
-
-    # 构建天气报告
-    report = [
-        f"{location} {date} 天气预报",
-        f"温度：{temperature}°C",
-        f"风力：{wind_speed}级",
-        f"天气状况：{condition}"
-    ]
-
-    # 添加可选湿度信息
-    if humidity is not None:
-        report.append(f"湿度：{humidity}%")
-
-    # 添加天气建议
-    if temperature > 30:
-        report.append("温馨提示：今日高温，注意防暑")
-    elif temperature < 10:
-        report.append("温馨提示：气温较低，注意保暖")
-
-    if "雨" in condition:
-        report.append("提醒：建议携带雨具")
-
-    return "\n".join(report)
-
-
-# 示例用法：get_weather("北京", 25, 3)
+def get_weather_forecast(location: str) -> str:
+    """Get the current weather and forecast for a location."""
+    try:
+        return f"Weather forecast for {location}: Sunny with a high of 25°C and low of 15°C. 10% chance of precipitation."
+    except Exception as e:
+        return f"Error fetching weather data: {str(e)}"
 
 weather_tool = StructuredTool.from_function(
-    func=get_weather,
+    func=get_weather_forecast,
     name="WeatherForecast",
-    description="用于获取城市天气预报信息，包含温度、风力、湿度等数据",
-    args_schema=WeatherInput
+    description="Get current weather and forecast for a specific location. Provide the city name or location.",
+    args_schema=WeatherInput  # This connects the schema to the function
 )
 
 class CalculatorInput(BaseModel):
