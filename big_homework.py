@@ -21,13 +21,13 @@ from langchain.agents import ZeroShotAgent, AgentExecutor
 # 加载环境变量
 load_dotenv()
 
-# # 初始化Langfuse（用于AI交互追踪）
-# langfuse = Langfuse(
-#     public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
-#     secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
-#     host=os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
-# )
-# langfuse_handler = CallbackHandler()  # Langfuse回调处理器
+# 初始化Langfuse（用于AI交互追踪）
+langfuse = Langfuse(
+    public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+    secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+    host=os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+)
+langfuse_handler = CallbackHandler()  # Langfuse回调处理器
 
 # 1. 定义天气工具
 class WeatherInput(BaseModel):
@@ -265,5 +265,5 @@ if __name__ == "__main__":
         query = input("\nEnter your question (or 'exit' to quit): ")
         if query.lower() == 'exit':
             break
-        result = agent.invoke(query)
+        result = agent.invoke({"input": query}, config={"callbacks": [langfuse_handler]})
         print(f"Result: {result['output']}")
