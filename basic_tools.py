@@ -65,7 +65,14 @@ calculator_tool = StructuredTool.from_function(
 
 load_dotenv()
 
-llm = ChatDeepSeek(api_key=os.getenv("DEEPSEEK_API_KEY"), model="deepseek-chat")
+llm = ChatNVIDIA(
+#   model="deepseek-ai/deepseek-r1",
+  model="meta/llama-3.3-70b-instruct",
+  api_key=os.getenv("NVIDIA_API_KEY_LLAMA33"),
+  temperature=0.6,
+  top_p=0.7,
+  max_tokens=4096,
+)
 
 
 tools = [calculator_tool,weather_tool]
